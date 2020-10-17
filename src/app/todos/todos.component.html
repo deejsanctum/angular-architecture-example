@@ -1,0 +1,28 @@
+<div class="todos">
+  <div>
+    <span>Filter by</span>
+    <mat-checkbox class="example-margin" (change)="filterTodosByCompleted($event.checked)">
+      Completed only
+    </mat-checkbox>
+  </div>
+  <div>
+    <span>Number of records: {{todos.length}}</span>
+  </div>
+  <table *ngIf="!loading;else loadingTable">
+    <tr>
+      <th>userId</th>
+      <th>id</th>
+      <th>title</th>
+      <th>completed</th>
+    </tr>
+    <tr *ngFor="let todo of todos; let i=index">
+      <td>{{todo.userId}}</td>
+      <td>{{todo.id}}</td>
+      <td>{{todo.title}}</td>
+      <td>{{todo.completed}}</td>
+    </tr>
+  </table>
+</div>
+<ng-template #loadingTable>
+  <span>Loading records...</span>
+</ng-template>
