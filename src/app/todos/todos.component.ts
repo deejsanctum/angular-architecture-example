@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApplicationFacadeService } from './facade/application-facade.service';
-import { Post } from './shared/models/posts/post.model';
-import { Todo } from './shared/models/todos/todo.model';
+import { TodoFacadeService } from './facade/todo-facade.service';
+import { Todo } from './models/todo.model';
 
 @Component({
   selector: 'app-todos',
@@ -10,29 +9,19 @@ import { Todo } from './shared/models/todos/todo.model';
   styleUrls: ['./todos.component.css']
 })
 export class TodosComponent implements OnInit {
-  posts$: Observable<Post[]>;
+  loading$: Observable<boolean>;
+  todos$: Observable<Todo[]>;
 
-  loading = true;
-  todos: Todo[] = [];
-
-  constructor(private applicationFacadeService: ApplicationFacadeService) {
-    this.posts$ = this.applicationFacadeService.getPostObservable();
-
-    this.applicationFacadeService.getTodoObservable().subscribe(todos => this.todos = todos);
-    this.applicationFacadeService.getLoadingTodosObservable().subscribe(loading => this.loading = loading);
+  constructor(private todoFacade: TodoFacadeService) {
+    this.loading$ = this.todoFacade.getLoadingTodosObservable();
+    this.todos$ = this.todoFacade.getTodoObservable();
   }
 
   ngOnInit(): void {
-    this.applicationFacadeService.updateTodos();
-  }
-
-  setUserFilterOnPosts(event: Event): void {
-    const value: string | null = (event as InputEvent).data;
-    this.applicationFacadeService.filterPostsByUser(value);
+    this.todoFacade.updateTodos();
   }
 
   filterTodosByCompleted(completed?: boolean): void {
-    this.applicationFacadeService.updateTodos(completed);
+    this.todoFacade.updateTodos(completed);
   }
-
 }
