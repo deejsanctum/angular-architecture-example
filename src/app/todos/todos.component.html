@@ -1,9 +1,12 @@
-<div class="todos">
-  <div>
-    <span>Filter by</span>
-    <mat-checkbox class="example-margin" (change)="filterTodosByCompleted($event.checked)">
-      Completed only
-    </mat-checkbox>
-  </div>
-  <app-todo-table [loading]="(loading$ | async)!" [todos]="(todos$ | async)!"></app-todo-table>
-</div>
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+    <app-filter-options [loadingUsers]="(loadingUsers$ | async)!" [users]="(users$ | async)!"></app-filter-options>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <p><button mat-button (click)="sidenav.toggle()">Sidenav</button></p>
+    <div class="todos">
+      <app-todo-table [loading]="(loadingTodos$ | async)!" [todos]="(todos$ | async)!"></app-todo-table>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

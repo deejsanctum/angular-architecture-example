@@ -1,0 +1,23 @@
+<div>
+  <span>Filter by</span>
+  <mat-checkbox class="example-margin" [(ngModel)]="completedOnly" (change)="filterTodosByCompleted($event.checked)">
+    Completed only
+  </mat-checkbox>
+  <div class="users-selection" *ngIf="!loadingUsers; else loadingSkeleton">
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      class="example-radio-group"
+      [(ngModel)]="selectedUser"
+      (change)="onUserChanged($event)">
+      <div class="choice" *ngFor="let user of users">
+        <mat-radio-button class="example-radio-button" [value]="user.id">
+          {{user.name}}
+        </mat-radio-button>
+      </div>
+    </mat-radio-group>
+  </div>
+</div>
+
+<ng-template #loadingSkeleton>
+  <span>Loading records...</span>
+</ng-template>
