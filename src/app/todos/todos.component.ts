@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TodoFacadeService } from './facade/todo-facade.service';
 import { Todo } from './models/todo.model';
+import { TodoApiService } from './services/api/todo/todo-api.service';
+import { TodoStateService } from './services/state/todo/todo-state.service';
 
 @Component({
   selector: 'app-todos',
@@ -12,16 +13,27 @@ export class TodosComponent implements OnInit {
   loading$: Observable<boolean>;
   todos$: Observable<Todo[]>;
 
-  constructor(private todoFacade: TodoFacadeService) {
-    this.loading$ = this.todoFacade.getLoadingTodosObservable();
-    this.todos$ = this.todoFacade.getTodoObservable();
+  constructor(
+    private todoApiService: TodoApiService,
+    private todoStateService: TodoStateService
+  ) {
+    this.loading$ = this.todoStateService.loadingTodos$;
+    this.todos$ = this.todoStateService.todos$;
   }
 
   ngOnInit(): void {
-    this.todoFacade.updateTodos();
+    this.updateTodos();
   }
 
   filterTodosByCompleted(completed?: boolean): void {
-    this.todoFacade.updateTodos(completed);
+    this.updateTodos(completed);
+  }
+
+  updateTodos(completed?: boolean): void {
+    this.todoStateService.loadingTodos = true;
+    this.todoApiService.getTodos(completed).subscribe(todos => {
+      this.todoStateService.todos = todos;
+      this.todoStateService.loadingTodos = false;
+    });
   }
 }
